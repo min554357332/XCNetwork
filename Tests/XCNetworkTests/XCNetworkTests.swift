@@ -26,8 +26,6 @@ func setNetwork() async throws {
     await XCNetwork.share.setCache_encrypt_data_preprocessor(.init())
     await XCNetwork.share.setNEDataPreprocessor(.init())
     await XCNetwork.share.setNERequestInterceptor(.init())
-    
-    
 }
 
 @Test func ipconfig() async throws {

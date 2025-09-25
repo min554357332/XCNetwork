@@ -4,22 +4,22 @@ import AES_256_CBC
 public actor XCNetwork {
     public static let share: XCNetwork = .init()
     
-    internal var en_de_decorator: Aes256cbc_decorator!
-    internal var http_api_decorator: HttpApi_decorator!
-    internal var userDefault_decorator: UserDefault_decorator!
-    internal var keyChain_decorator: KeyChain_decorator!
-    internal var ipconfig_decorator: Ipconfig_decorator!
-    internal var ua_decorator: UA_decorator!
+    public private(set) var en_de_decorator: Aes256cbc_decorator!
+    public private(set) var http_api_decorator: HttpApi_decorator!
+    public private(set) var userDefault_decorator: UserDefault_decorator!
+    public private(set) var keyChain_decorator: KeyChain_decorator!
+    public private(set) var ipconfig_decorator: Ipconfig_decorator!
+    public private(set) var ua_decorator: UA_decorator!
     
-    internal var ne_data_preprocessor: NEDataPreprocessor!
-    internal var ne_request_interceptor: NERequestInterceptor!
+    public private(set) var ne_data_preprocessor: NEDataPreprocessor!
+    public private(set) var ne_request_interceptor: NERequestInterceptor!
     
-    internal var cache_decrypt_data_preprocessor: CacheDecryptDataPreprocessor!
-    internal var cache_encrypt_data_preprocessor: CacheEncryptDataPreprocessor!
+    public private(set) var cache_decrypt_data_preprocessor: CacheDecryptDataPreprocessor!
+    public private(set) var cache_encrypt_data_preprocessor: CacheEncryptDataPreprocessor!
     
-    internal var enable_local_resource = true
+    public private(set) var enable_local_resource = true
     
-    internal var enable_cache = true
+    public private(set) var enable_cache = true
     
     private init() {}
 }
