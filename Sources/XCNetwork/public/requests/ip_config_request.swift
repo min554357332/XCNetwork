@@ -1,7 +1,7 @@
 import Foundation
 import XCCache
 
-public protocol IPConfig: NECache {
+public protocol IPConfig: Sendable, Codable, NECache {
     var isp: String { get }
     var ipcountry: String { get }
 }
