@@ -51,7 +51,14 @@ extension Citys_request {
         let api = await XCNetwork.share.http_api_decorator.decrypt_citys
         let url = host.config_host + api
         let task = NE.fire(url, paramaters: paramaters)
-        let result = try await task.serModel(Base_response<[Citys_response]>.self, dataPreprocessor: XCNetwork.share.ne_data_preprocessor).value
+        
+        do {
+            let result = try await task.serModel(Base_response<[Citys_response]>.self, dataPreprocessor: XCNetwork.share.ne_data_preprocessor).value
+        } catch {
+            print(task.cURLDescription())
+            throw error
+        }
+        
         return result.data ?? []
     }
     
