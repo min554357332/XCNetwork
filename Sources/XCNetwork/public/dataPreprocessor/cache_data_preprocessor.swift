@@ -7,7 +7,7 @@ public struct CacheDecryptDataPreprocessor: Sendable, XCCacheDataPreprocessor {
     let key: Data
     let iv: Data
     
-    init() async {
+    public init() async {
         let decorator = await XCNetwork.share.en_de_decorator!
         self.key = decorator.key_data
         self.iv = decorator.iv_data
@@ -23,8 +23,8 @@ public struct CacheEncryptDataPreprocessor: Sendable, XCCacheDataPreprocessor {
     
     let key: Data
     let iv: Data
-    
-    init() async {
+
+    public init() async {
         let decorator = await XCNetwork.share.en_de_decorator!
         self.key = decorator.key_data
         self.iv = decorator.iv_data
