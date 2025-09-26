@@ -54,12 +54,13 @@ extension Citys_request {
         
         do {
             let result = try await task.serModel(Base_response<[Citys_response]>.self, dataPreprocessor: XCNetwork.share.ne_data_preprocessor).value
+            return result.data ?? []
         } catch {
             print(task.cURLDescription())
             throw error
         }
         
-        return result.data ?? []
+        
     }
     
     private static func _fetch_local() async throws -> [Citys_response] {
