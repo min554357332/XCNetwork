@@ -49,6 +49,5 @@ let package = Package(
                 .define("TEST")
             ]
         ),
-    ],
-    swiftLanguageModes: [.version("6.1")]
+    ]
 )
