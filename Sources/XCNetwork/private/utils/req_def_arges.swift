@@ -74,11 +74,7 @@ internal struct ReqDefArge {
     }
     
     internal static func currentPK() async -> String {
-        if Bundle(identifier: "xcnetwork.XCNetworkTests") != nil {
-            return "com.unlimitedr.tunnel.main"
-        } else {
-            return Bundle.main.bundleIdentifier ?? ""
-        }
+        return "com.unlimitedr.tunnel.main"
     }
     
     internal static func local() async -> String {
