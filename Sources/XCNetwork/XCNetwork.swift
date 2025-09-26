@@ -4,6 +4,7 @@ import AES_256_CBC
 public actor XCNetwork {
     public static let share: XCNetwork = .init()
     
+    public private(set) var app_groups_decorator: App_groups_decorator!
     public private(set) var en_de_decorator: Aes256cbc_decorator!
     public private(set) var http_api_decorator: HttpApi_decorator!
     public private(set) var userDefault_decorator: UserDefault_decorator!
@@ -25,6 +26,9 @@ public actor XCNetwork {
 }
 
 extension XCNetwork {
+    public func setAppGroups(_ decorator: App_groups_decorator) async {
+        self.app_groups_decorator = decorator
+    }
     public func setEnDe(_ decorator: Aes256cbc_decorator) async {
         self.en_de_decorator = decorator
     }
