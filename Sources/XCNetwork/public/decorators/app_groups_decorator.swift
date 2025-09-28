@@ -35,7 +35,7 @@ extension App_groups_decorator {
         let url = try await fileURL("chose_city")
         let data = try JSONEncoder().encode(city)
         let cache_en = await XCNetwork.share.cache_encrypt_data_preprocessor
-        let aes_data = cache_en!.preprocess(data: data)
+        let aes_data = try await cache_en!.preprocess(data: data)
         try aes_data.write(to: url)
     }
 
@@ -46,30 +46,30 @@ extension App_groups_decorator {
         }
         let data = try Data(contentsOf: url)
         let cache_de = await XCNetwork.share.cache_decrypt_data_preprocessor
-        let aes_data = cache_de!.preprocess(data: data)
+        let aes_data = try await cache_de!.preprocess(data: data)
         let city = try JSONDecoder().decode(Citys_response.self, from: aes_data)
         return city
     }
 }
 
 extension App_groups_decorator {
-    public func chose_node(_ node: Nodes_response) async throws {
+    public func chose_node(_ node: Node_response) async throws {
         let url = try await fileURL("chose_node")
         let data = try JSONEncoder().encode(node)
         let cache_en = await XCNetwork.share.cache_encrypt_data_preprocessor
-        let aes_data = cache_en!.preprocess(data: data)
+        let aes_data = try await cache_en!.preprocess(data: data)
         try aes_data.write(to: url)
     }
 
-    public func get_chose_node() async throws -> Nodes_response? {
+    public func get_chose_node() async throws -> Node_response? {
         let url = try await fileURL("chose_node")
         guard FileManager.default.fileExists(atPath: url.path) else {
             return nil
         }
         let data = try Data(contentsOf: url)
         let cache_de = await XCNetwork.share.cache_decrypt_data_preprocessor
-        let aes_data = cache_de!.preprocess(data: data)
-        let node = try JSONDecoder().decode(Nodes_response.self, from: aes_data)
+        let aes_data = try await cache_de!.preprocess(data: data)
+        let node = try JSONDecoder().decode(Node_response.self, from: aes_data)
         return node
     }
 }
