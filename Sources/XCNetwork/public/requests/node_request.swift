@@ -42,11 +42,11 @@ public struct Node_request: Requestprotocol {
     public var is_cn: Bool!
     
     public var city_id: Int = 0
-    public var retry: Int = 0
+    public var retry: Int = 1
 }
 
 public extension Node_request {
-    static func fire(_ city_id: Int, retry: Int = 0) async throws -> [Node_response] {
+    static func fire(_ city_id: Int, retry: Int = 1) async throws -> [Node_response] {
         var paramaters = try await Node_request.create()
         paramaters.city_id = city_id
         paramaters.retry = retry

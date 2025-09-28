@@ -1,6 +1,5 @@
 import Foundation
 import AES_256_CBC
-import XCNetwork
 
 public actor App_groups_decorator: Sendable {
     private let id: String
@@ -57,12 +56,16 @@ extension App_groups_decorator {
 }
 
 extension App_groups_decorator {
-    public func chose_node(_ node: Node_response) async throws {
+    public func chose_node(_ node: Node_response?) async throws {
         let url = try await fileURL("chose_node")
-        let data = try JSONEncoder().encode(node)
-        let cache_en = await XCNetwork.share.cache_encrypt_data_preprocessor
-        let aes_data = try await cache_en!.preprocess(data: data)
-        try aes_data.write(to: url)
+        if let node = node {
+            let data = try JSONEncoder().encode(node)
+            let cache_en = await XCNetwork.share.cache_encrypt_data_preprocessor
+            let aes_data = try await cache_en!.preprocess(data: data)
+            try aes_data.write(to: url)
+        } else {
+            try FileManager.default.removeItem(at: url)
+        }
     }
 
     public func get_chose_node() async throws -> Node_response? {
