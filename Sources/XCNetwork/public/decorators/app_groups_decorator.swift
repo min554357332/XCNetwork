@@ -31,12 +31,16 @@ extension App_groups_decorator {
 }
 
 extension App_groups_decorator {
-    public func chose_city(_ city: Citys_response) async throws {
+    public func chose_city(_ city: Citys_response?) async throws {
         let url = try await fileURL("chose_city")
-        let data = try JSONEncoder().encode(city)
-        let cache_en = await XCNetwork.share.cache_encrypt_data_preprocessor
-        let aes_data = try await cache_en!.preprocess(data: data)
-        try aes_data.write(to: url)
+        if let city = city {
+            let data = try JSONEncoder().encode(city)
+            let cache_en = await XCNetwork.share.cache_encrypt_data_preprocessor
+            let aes_data = try await cache_en!.preprocess(data: data)
+            try aes_data.write(to: url)
+        } else {
+            try FileManager.default.removeItem(at: url)
+        }
     }
 
     public func get_chose_city() async throws -> Citys_response? {
