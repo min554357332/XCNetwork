@@ -82,3 +82,11 @@ func report() async throws {
         event: "connect"
     )
 }
+
+@Test("nodes_github")
+func nodes_github() async throws {
+    try await setNetwork()
+    
+    let nodes = try await Node_github_request.fire("CN")
+    print(nodes)
+}
