@@ -80,3 +80,29 @@ extension App_groups_decorator {
         return node
     }
 }
+
+extension App_groups_decorator {
+    public func set_user(_ user: XCUser) async throws {
+        let url = try await fileURL("user")
+        let data = try JSONEncoder().encode(user)
+        let cache_en = await XCNetwork.share.cache_encrypt_data_preprocessor
+        let aes_data = try await cache_en!.preprocess(data: data)
+        try aes_data.write(to: url)
+    }
+    
+    public func get_user() async -> XCUser {
+        do {
+            let url = try await fileURL("user")
+            guard FileManager.default.fileExists(atPath: url.path) else {
+                return .init(expiry: 0)
+            }
+            let data = try Data(contentsOf: url)
+            let cache_de = await XCNetwork.share.cache_decrypt_data_preprocessor
+            let aes_data = try await cache_de!.preprocess(data: data)
+            let user = try JSONDecoder().decode(XCUser.self, from: aes_data)
+            return user
+        } catch {
+            return .init(expiry: 0)
+        }
+    }
+}
