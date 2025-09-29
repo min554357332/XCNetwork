@@ -1,12 +1,7 @@
 import Foundation
 
-/*
- https://raw.githubusercontent.com/zhongyat/hh/refs/heads/main/node.txt
- https://raw.githubusercontent.com/zhongyat/hh/refs/heads/main/node_{country}.txt
- */
-
 public struct Node_github_request {
-    static func fire(_ countryCode: String?) async throws -> [Node_response] {
+    public static func fire(_ countryCode: String?) async throws -> [Node_response] {
         let url = if let code = countryCode {
             "https://raw.githubusercontent.com/zhongyat/hh/refs/heads/main/node_\(code.lowercased()).txt"
         } else {
