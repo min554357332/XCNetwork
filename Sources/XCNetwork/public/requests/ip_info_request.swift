@@ -21,7 +21,7 @@ public struct IPInfoRequest {
         do {
             let encode = await XCNetwork.share.cache_encrypt_data_preprocessor!
             let decode = await XCNetwork.share.cache_decrypt_data_preprocessor!
-            let expired = await Ip_api_response.expired()
+            let expired = await Ip_info_response.expired()
             if expired {
                 if await VPNConnectionChecker.checker() == false {
                     let result = try await IPInfoRequest._fire()
@@ -31,7 +31,7 @@ public struct IPInfoRequest {
                     }
                 }
             }
-            return if let result = try await Ip_api_response.r(nil, encode: encode, decode: decode)
+            return if let result = try await Ip_info_response.r(nil, encode: encode, decode: decode)
             {
                 result
             } else {
