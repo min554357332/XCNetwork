@@ -4,12 +4,12 @@ import VPNConnectionChecker
 public struct IPInfoRequest {
     private static func _fire() async throws -> IPConfig {
         let task = NE.fire(
-            await XCNetwork.share.ipconfig_decorator.decrypt_url_1,
+            await XCNetwork.share.ipconfig_decorator.decrypt_url_2,
             interceptor: await XCNetwork.share.ne_request_interceptor
         ) { request in
             request.timeoutInterval = 5
         }
-        let result = try await task.serModel(Ip_api_response.self).value
+        let result = try await task.serModel(Ip_info_response.self).value
         return result
     }
     
