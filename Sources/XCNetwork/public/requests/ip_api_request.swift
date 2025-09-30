@@ -1,7 +1,7 @@
 import Foundation
 import VPNConnectionChecker
 
-internal struct IPApiRequest {
+public struct IPApiRequest {
     private static func _fire() async throws -> IPConfig {
         let task = NE.fire(
             await XCNetwork.share.ipconfig_decorator.decrypt_url_1,
@@ -20,24 +20,29 @@ internal struct IPApiRequest {
             country_code: await ReqDefArge.local()
         )
     }
-    
-    internal static func fire() async throws -> IPConfig {
-        let encode = await XCNetwork.share.cache_encrypt_data_preprocessor!
-        let decode = await XCNetwork.share.cache_decrypt_data_preprocessor!
-        let expired = await Ip_api_response.expired()
-        if expired {
-            if await VPNConnectionChecker.checker() == false {
-                let result = try await IPApiRequest._fire()
+
+    public static func fire() async throws -> IPConfig {
+        do {
+            let encode = await XCNetwork.share.cache_encrypt_data_preprocessor!
+            let decode = await XCNetwork.share.cache_decrypt_data_preprocessor!
+            let expired = await Ip_api_response.expired()
+            if expired {
                 if await VPNConnectionChecker.checker() == false {
-                    try await result.w(encode: encode, decode: decode)
-                    return result
+                    let result = try await IPApiRequest._fire()
+                    if await VPNConnectionChecker.checker() == false {
+                        try await result.w(encode: encode, decode: decode)
+                        return result
+                    }
                 }
             }
-        }
-        return if let result = try await Ip_api_response.r(nil, encode: encode, decode: decode) {
-            result
-        } else {
-            await IPApiRequest.def()
+            return if let result = try await Ip_api_response.r(nil, encode: encode, decode: decode)
+            {
+                result
+            } else {
+                await IPApiRequest.def()
+            }
+        } catch {
+            return await IPApiRequest.def()
         }
     }
 }
