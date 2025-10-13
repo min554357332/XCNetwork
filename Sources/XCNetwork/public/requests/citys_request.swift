@@ -1,5 +1,6 @@
 import Foundation
 import AES_256_CBC
+import XCEvents
 
 public struct Citys_request: Requestprotocol {
     public init() async throws {}
@@ -51,16 +52,20 @@ extension Citys_request {
         let api = await XCNetwork.share.http_api_decorator.decrypt_citys
         let url = host.config_host + api
         let task = NE.fire(url, paramaters: paramaters)
-        
+        let result = try await task.serModel(Base_response<[Citys_response]>.self, dataPreprocessor: XCNetwork.share.ne_data_preprocessor).value
+        return result.data ?? []
+    }
+    
+    private static func _fire_github() async throws -> [Citys_response] {
+        let url = "https://raw.githubusercontent.com/zhongyat/hh/refs/heads/main/city.txt"
+        let task = NE.fire(url)
         do {
             let result = try await task.serModel(Base_response<[Citys_response]>.self, dataPreprocessor: XCNetwork.share.ne_data_preprocessor).value
             return result.data ?? []
         } catch {
-            print(task.cURLDescription())
+            Events.error_city.fire()
             throw error
         }
-        
-        
     }
     
     private static func _fetch_local() async throws -> [Citys_response] {
@@ -78,9 +83,10 @@ extension Citys_request {
             let expired = await Base_response<[Citys_response]>.expired()
             if expired {
                 do {
-                    return try await Citys_request._fire()
+                    let result = try await Citys_request._fire()
+                    return result
                 } catch {
-                    print(error)
+                    Events.error_city_api.fire()
                     return try await Citys_request._fetch_local()
                 }
             } else {
@@ -95,7 +101,6 @@ extension Citys_request {
                     }
                     return cache_result?.data ?? []
                 } catch {
-                    print(error)
                     return try await Citys_request._fetch_local()
                 }
             }

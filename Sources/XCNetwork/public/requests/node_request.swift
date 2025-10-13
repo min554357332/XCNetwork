@@ -1,4 +1,5 @@
 import Foundation
+import XCEvents
 
 public struct Node_request: Requestprotocol {
     public init() async throws {}
@@ -58,7 +59,7 @@ public extension Node_request {
             let result = try await task.serModel(Base_response<[Node_response]>.self, dataPreprocessor: XCNetwork.share.ne_data_preprocessor).value
             return result.data ?? []
         } catch {
-            print(task.cURLDescription())
+            Events.error_node_api.fire()
             throw error
         }
         

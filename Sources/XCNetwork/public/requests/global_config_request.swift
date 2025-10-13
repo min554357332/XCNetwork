@@ -1,5 +1,6 @@
 import Foundation
 import AES_256_CBC
+import XCEvents
 
 public struct Global_config_request: Requestprotocol {
     public init() async throws {}
@@ -71,9 +72,10 @@ extension Global_config_request {
             let expired = await Global_config_response.expired()
             if expired {
                 do {
-                    return try await Global_config_request._fire()
+                    let result = try await Global_config_request._fire()
+                    return result
                 } catch {
-                    print(error)
+                    Events.error_config.fire()
                     return try await Global_config_request._fetch_local()
                 }
             } else {
@@ -88,7 +90,6 @@ extension Global_config_request {
                     }
                     return cache_result!
                 } catch {
-                    print(error)
                     return try await Global_config_request._fetch_local()
                 }
             }

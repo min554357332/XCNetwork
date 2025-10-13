@@ -22,6 +22,7 @@ func setNetwork() async throws {
     )
     try await XCNetwork.share.setUD(.init(first_install_time: "X/qc0jEzO6OzCNueV3KezSbb7T3pSu/jrQtjr3I/kX0=", last_update_time: "xB2Nh3ACwkmx0Fld9WLk/RYQVrf4Xy6THFTXddlNAXQ="))
     try await XCNetwork.share.setKeyChain(.init(key_uuid: "mnCm0wLU/h33Tk+O445HRz2+T/NzQePrVAYU5FOnzRg="))
+    try await XCNetwork.share.setAppGroups(.init(id: "BiAg8f2bX/ANU8J8Ngd+iZQequSB8dHbXgJ2a5XNrAGDdHRTECik/Ch2Zeld5qHp"))
     await XCNetwork.share.setCache_decrypt_data_preprocessor(.init())
     await XCNetwork.share.setCache_encrypt_data_preprocessor(.init())
     await XCNetwork.share.setNEDataPreprocessor(.init())

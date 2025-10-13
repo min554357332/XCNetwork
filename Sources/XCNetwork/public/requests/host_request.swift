@@ -1,5 +1,6 @@
 import Foundation
 import AES_256_CBC
+import XCEvents
 
 public struct HostRequest {
     
@@ -29,9 +30,10 @@ public struct HostRequest {
             let expired = await Host_response.expired()
             if expired {
                 do {
-                    return try await HostRequest._fire()
+                    let result = try await HostRequest._fire()
+                    return result
                 } catch {
-                    print(error)
+                    Events.error_domain.fire()
                     return try await HostRequest._fetch_local()
                 }
             } else {
