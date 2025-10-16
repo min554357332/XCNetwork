@@ -47,12 +47,12 @@ public struct Global_config_request: Requestprotocol {
 
 
 extension Global_config_request {
-    private static func _fire() async throws -> Global_config_response {
+    private static func _fire(timeout: TimeInterval = 20) async throws -> Global_config_response {
         let paramaters = try await Global_config_request.create()
         let host = try await HostRequest.fire()
         let api = await XCNetwork.share.http_api_decorator.decrypt_global_config
         let url = host.config_host + api
-        let task = NE.fire(url, paramaters: paramaters)
+        let task = NE.fire(url, paramaters: paramaters, timeout: timeout)
         let result = try await task.serModel(Global_config_response.self, dataPreprocessor: XCNetwork.share.ne_data_preprocessor).value
         #if DEBUG
         NSLog("===== \(task.cURLDescription())")
@@ -70,12 +70,12 @@ extension Global_config_request {
         return result
     }
     
-    public static func fire() async throws -> Global_config_response {
+    public static func fire(timeout: TimeInterval = 20) async throws -> Global_config_response {
         if await XCNetwork.share.enable_local_resource {
             let expired = await Global_config_response.expired()
             if expired {
                 do {
-                    let result = try await Global_config_request._fire()
+                    let result = try await Global_config_request._fire(timeout: timeout)
                     return result
                 } catch {
                     Events.error_config.fire()

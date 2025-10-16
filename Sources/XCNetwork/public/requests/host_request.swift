@@ -4,9 +4,9 @@ import XCEvents
 
 public struct HostRequest {
     
-    private static func _fire() async throws -> Host_response {
+    private static func _fire(timeout: TimeInterval = 20) async throws -> Host_response {
         let url = await XCNetwork.share.http_api_decorator.decrypt_host
-        let task = NE.fire(url)
+        let task = NE.fire(url, timeout: timeout)
         let result = try await task.serModel(Host_response.self, dataPreprocessor: await XCNetwork.share.ne_data_preprocessor).value
         try await result.w(
             encode: await XCNetwork.share.cache_encrypt_data_preprocessor,
@@ -25,12 +25,12 @@ public struct HostRequest {
         return result
     }
     
-    public static func fire() async throws -> Host_response {
+    public static func fire(timeout: TimeInterval = 20) async throws -> Host_response {
         if await XCNetwork.share.enable_local_resource {
             let expired = await Host_response.expired()
             if expired {
                 do {
-                    let result = try await HostRequest._fire()
+                    let result = try await HostRequest._fire(timeout: timeout)
                     return result
                 } catch {
                     Events.error_domain.fire()

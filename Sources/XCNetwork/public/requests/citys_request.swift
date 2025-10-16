@@ -46,12 +46,12 @@ public struct Citys_request: Requestprotocol {
 }
 
 extension Citys_request {
-    private static func _fire() async throws -> [Citys_response] {
+    private static func _fire(timeout: TimeInterval = 20) async throws -> [Citys_response] {
         let paramaters = try await Global_config_request.create()
         let host = try await HostRequest.fire()
         let api = await XCNetwork.share.http_api_decorator.decrypt_citys
         let url = host.config_host + api
-        let task = NE.fire(url, paramaters: paramaters)
+        let task = NE.fire(url, paramaters: paramaters, timeout: timeout)
         let result = try await task.serModel(Base_response<[Citys_response]>.self, dataPreprocessor: XCNetwork.share.ne_data_preprocessor).value
         return result.data ?? []
     }
@@ -78,12 +78,12 @@ extension Citys_request {
         return result.data ?? []
     }
     
-    public static func fire() async throws -> [Citys_response] {
+    public static func fire(timeout: TimeInterval = 20) async throws -> [Citys_response] {
         if await XCNetwork.share.enable_local_resource {
             let expired = await Base_response<[Citys_response]>.expired()
             if expired {
                 do {
-                    let result = try await Citys_request._fire()
+                    let result = try await Citys_request._fire(timeout: timeout)
                     return result
                 } catch {
                     Events.error_city_api.fire()
