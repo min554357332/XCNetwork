@@ -56,9 +56,9 @@ extension Citys_request {
         return result.data ?? []
     }
     
-    private static func _fire_github() async throws -> [Citys_response] {
+    private static func _fire_github(timeout: TimeInterval = 20) async throws -> [Citys_response] {
         let url = "https://raw.githubusercontent.com/zhongyat/hh/refs/heads/main/city.txt"
-        let task = NE.fire(url)
+        let task = NE.fire(url, timeout: timeout)
         do {
             let result = try await task.serModel(Base_response<[Citys_response]>.self, dataPreprocessor: XCNetwork.share.ne_data_preprocessor).value
             return result.data ?? []
@@ -88,7 +88,8 @@ extension Citys_request {
                 } catch {
                     Events.error_city_api.fire()
                     do {
-                        let result = try await Citys_request._fire_github()
+                        let result = try await Citys_request._fire_github(timeout: timeout)
+                        return result
                     } catch {
                         return try await Citys_request._fetch_local()
                     }
