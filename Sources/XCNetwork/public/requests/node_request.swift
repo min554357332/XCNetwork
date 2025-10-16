@@ -47,14 +47,14 @@ public struct Node_request: Requestprotocol {
 }
 
 public extension Node_request {
-    static func fire(_ city_id: Int, retry: Int = 1) async throws -> [Node_response] {
+    static func fire(_ city_id: Int, retry: Int = 1, timeout: TimeInterval) async throws -> [Node_response] {
         var paramaters = try await Node_request.create()
         paramaters.city_id = city_id
         paramaters.retry = retry
         let host = try await HostRequest.fire()
         let api = await XCNetwork.share.http_api_decorator.decrypt_node
         let url = host.config_host + api
-        let task = NE.fire(url, paramaters: paramaters)
+        let task = NE.fire(url, paramaters: paramaters, timeout: timeout)
         do {
             let result = try await task.serModel(Base_response<[Node_response]>.self, dataPreprocessor: XCNetwork.share.ne_data_preprocessor).value
             return result.data ?? []

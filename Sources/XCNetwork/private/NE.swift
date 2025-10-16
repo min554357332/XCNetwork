@@ -6,6 +6,7 @@ struct NE {
         _ c: any URLConvertible,
         method: HTTPMethod = .get,
         paramaters: Parameters? = nil,
+        timeout: TimeInterval = 10,
         encoder: any ParameterEncoder = URLEncodedFormParameterEncoder.default,
         headers: HTTPHeaders? = nil,
         interceptor: RequestInterceptor? = nil,
@@ -19,13 +20,14 @@ struct NE {
             headers: headers,
             interceptor: interceptor) { request in
                 try requestModifier?(&request)
-                try NE._requestModifier(request: &request)
+                try NE._requestModifier(request: &request, timeout: timeout)
             }
     }
     
     static func fire(
         _ c: any URLConvertible,
         method: HTTPMethod = .get,
+        timeout: TimeInterval = 10,
         encoding: any ParameterEncoding = URLEncoding.default,
         headers: HTTPHeaders? = nil,
         interceptor: RequestInterceptor? = nil,
@@ -40,13 +42,13 @@ struct NE {
             interceptor: interceptor
         ) { request in
             try requestModifier?(&request)
-            try NE._requestModifier(request: &request)
+            try NE._requestModifier(request: &request, timeout: timeout)
         }
     }
     
-    static private func _requestModifier(request: inout URLRequest) throws {
+    static private func _requestModifier(request: inout URLRequest, timeout: TimeInterval) throws {
         request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
-        request.timeoutInterval = 10
+        request.timeoutInterval = timeout
     }
     
 }
