@@ -54,6 +54,9 @@ extension Global_config_request {
         let url = host.config_host + api
         let task = NE.fire(url, paramaters: paramaters)
         let result = try await task.serModel(Global_config_response.self, dataPreprocessor: XCNetwork.share.ne_data_preprocessor).value
+        #if DEBUG
+        print("===== \(task.cURLDescription())")
+        #endif
         return result
     }
     
