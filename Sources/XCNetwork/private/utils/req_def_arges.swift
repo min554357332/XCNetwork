@@ -4,7 +4,7 @@ import XCKeychain
 import Network
 import CoreTelephony
 
-internal struct ReqDefArge {
+public struct ReqDefArge {
     internal static func currentNWType() async -> String {
         let monitor = NWPathMonitor()
         let path = await monitor.path()
@@ -86,7 +86,7 @@ internal struct ReqDefArge {
         return code ?? "US"
     }
     
-    internal static func country() async throws -> String {
+    public static func country() async throws -> String {
         let ip_config = try await IPConfiguration.fetch_local()
         let config = try await Global_config_request.fetch_local()
         
