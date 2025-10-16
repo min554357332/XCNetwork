@@ -33,7 +33,7 @@ public extension Requestprotocol {
         request.simcountry = await ReqDefArge.currentSimCountryCode()
         request.isp = ip_config.isp
         request.ipcountry = ip_config.ipcountry
-        request.country = await ReqDefArge.local()
+        request.country = try await ReqDefArge.country()
         request.local = await ReqDefArge.local()
         request.lang = await ReqDefArge.lang()
         request.timezone = await ReqDefArge.timezone()
@@ -44,9 +44,6 @@ public extension Requestprotocol {
         request.phone_sdk = await ReqDefArge.phone_SDK()
         request.pk = await ReqDefArge.currentPK()
         request.uuid = await ReqDefArge.currentUUID(XCNetwork.share.keyChain_decorator.decrypt_key_uuid)
-        if request.uuid.isEmpty {
-            request.uuid = "123"
-        }
         request.ver = await ReqDefArge.appVer()
         request.is_vip = 0
         request.is_cn = false

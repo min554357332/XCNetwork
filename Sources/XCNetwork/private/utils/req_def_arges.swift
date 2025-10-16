@@ -86,6 +86,27 @@ internal struct ReqDefArge {
         return code ?? "US"
     }
     
+    internal static func country() async throws -> String {
+        let ip_config = try await IPConfiguration.fire()
+        let config = try await Global_config_request.fire()
+        
+        if config.import_country?.contains(ip_config.ipcountry) == true {
+            return ip_config.ipcountry.uppercased()
+        }
+        
+        let simCode = await ReqDefArge.currentSimCountryCode() ?? ""
+        if config.import_country?.contains(simCode) == true {
+            return simCode.uppercased()
+        }
+        
+        let local = await ReqDefArge.local()
+        if config.import_country?.contains(local) == true {
+            return local.uppercased()
+        }
+        
+        return ip_config.ipcountry.uppercased()
+    }
+    
     internal static func lang() async -> String {
         let code = if #available(iOS 16, *) {
             Locale.current.language.languageCode?.identifier
