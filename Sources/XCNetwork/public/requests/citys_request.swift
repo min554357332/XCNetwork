@@ -87,7 +87,11 @@ extension Citys_request {
                     return result
                 } catch {
                     Events.error_city_api.fire()
-                    return try await Citys_request._fetch_local()
+                    do {
+                        let result = try await Citys_request._fire_github()
+                    } catch {
+                        return try await Citys_request._fetch_local()
+                    }
                 }
             } else {
                 do {
