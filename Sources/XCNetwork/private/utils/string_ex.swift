@@ -16,6 +16,9 @@ extension String {
         if let data = Data(base64Encoded: self) {
             return data
         }
+        if let data = self.data(using: .utf8) {
+            return data
+        }
         throw AES256CBCErr.decrypt(.decrypt_faild(err_code))
     }
 }
