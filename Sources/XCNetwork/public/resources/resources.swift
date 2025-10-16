@@ -11,6 +11,7 @@ public extension LocalResources {
     func read() async throws -> Data {
         let resource = self.resource
         let string = try String(contentsOf: resource, encoding: .utf8)
+        let aaa = try await AES256CBC.de_string_async(string, -150010)
         let aes_result = try await AES256CBC.de_data_async(string, -15000)
         return aes_result
     }
