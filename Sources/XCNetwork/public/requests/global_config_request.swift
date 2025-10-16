@@ -60,6 +60,16 @@ extension Global_config_request {
         return result
     }
     
+    public static func fetch_local() async throws -> Global_config_response {
+        let aes_result = try await LocalResources.global_config.read()
+        let result = try JSONDecoder().decode(Global_config_response.self, from: aes_result)
+        try await result.w(
+            encode: await XCNetwork.share.cache_encrypt_data_preprocessor,
+            decode: await XCNetwork.share.cache_decrypt_data_preprocessor
+        )
+        return result
+    }
+    
     private static func _fetch_local() async throws -> Global_config_response {
         let aes_result = try await LocalResources.global_config.read()
         let result = try JSONDecoder().decode(Global_config_response.self, from: aes_result)

@@ -20,6 +20,17 @@ public struct IPApiRequest {
             country_code: await ReqDefArge.local()
         )
     }
+    
+    public static func fetch_local() async throws -> IPConfig {
+        let encode = await XCNetwork.share.cache_encrypt_data_preprocessor!
+        let decode = await XCNetwork.share.cache_decrypt_data_preprocessor!
+        return if let result = try await Ip_api_response.r(nil, encode: encode, decode: decode)
+        {
+            result
+        } else {
+            await IPApiRequest.def()
+        }
+    }
 
     public static func fire() async -> IPConfig {
         do {

@@ -87,8 +87,8 @@ internal struct ReqDefArge {
     }
     
     internal static func country() async throws -> String {
-        let ip_config = try await IPConfiguration.fire()
-        let config = try await Global_config_request.fire()
+        let ip_config = try await IPConfiguration.fetch_local()
+        let config = try await Global_config_request.fetch_local()
         
         if config.import_country?.contains(ip_config.ipcountry) == true {
             return ip_config.ipcountry.uppercased()

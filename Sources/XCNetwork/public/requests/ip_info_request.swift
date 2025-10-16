@@ -17,6 +17,17 @@ public struct IPInfoRequest {
         return Ip_info_response(country: await ReqDefArge.local(), org: await ReqDefArge.local())
     }
     
+    public static func fetch_local() async throws -> IPConfig {
+        let encode = await XCNetwork.share.cache_encrypt_data_preprocessor!
+        let decode = await XCNetwork.share.cache_decrypt_data_preprocessor!
+        return if let result = try await Ip_info_response.r(nil, encode: encode, decode: decode)
+        {
+            result
+        } else {
+            await IPInfoRequest.def()
+        }
+    }
+    
     public static func fire() async -> IPConfig {
         do {
             let encode = await XCNetwork.share.cache_encrypt_data_preprocessor!
